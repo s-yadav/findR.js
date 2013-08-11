@@ -1,0 +1,24 @@
+/*
+findR.js v 0.5.0
+Author: sudhanshu yadav
+Copyright (c) 2013 Sudhanshu Yadav, released under the MIT license.
+www.ignitersworld.com
+*/
+.findRhighlighted{ 
+	background-color:#FFFF80;
+ }
+.findRhighlightedFocused{
+	background-color:#C63;
+}
+#frToolbar{
+	display:none;
+	position:fixed;
+	bottom:0px;
+	background:#CCC;
+	padding:5px;
+	}
+#closeFrToolbar{
+	cursor:pointer;
+	font-size:20px;
+	font-weight: bold;
+	}
