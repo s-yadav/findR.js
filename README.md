@@ -23,11 +23,11 @@ Where Id is id of container.
 
 <h3>To initiate</h3>
 Find and replace can be bind in any number of containers so. So when user clicks that container it becomes the current container in which find and replace will work. You can also have some button to focus container for find and replace method.
-To initiate any control press <strong>ctrl+alt+key</strong>.
+To initiate any control press <strong>ctrl+key</strong>.
 
 There are four control keys. 
 
-1.	<strong>f (ctrl+alt+f)</strong> : To open find and replace toolbar.
-2.	<strong>n (ctrl+alt+n)</strong> : To go to next selection (cyclic).
-3.  <strong>p (ctrl+alt+p)</strong> : To go to previous selection (cyclic).
-4.  <strong>f (ctrl+alt+f)</strong> : To replace the current marked selection with replace text and go to next selection.
+1.	<strong>f (ctrl+f)</strong> : To open find and replace toolbar.
+2.	<strong>n (ctrl+n)</strong> : To go to next selection (cyclic).
+3.  <strong>p (ctrl+p)</strong> : To go to previous selection (cyclic).
+4.  <strong>f (ctrl+f)</strong> : To replace the current marked selection with replace text and go to next selection.
