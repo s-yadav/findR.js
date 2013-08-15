@@ -1,9 +1,13 @@
+/*
+	findR.js v 0.5.0
+	Author: sudhanshu yadav
+	Copyright (c) 2013 Sudhanshu Yadav, released under the MIT license.
+	www.ignitersworld.com
+*/
 ;(function (window, document, undefined) {
     var globV = {
         //maintain status of cntrl button pressed
-        cntrlPrsd: false,
         ctrl: false,
-        alt: false,
         //maintain status of initialized and binded
         initialized: false,
         binded: false,
@@ -92,7 +96,7 @@
 
                 eventCallback = function (e) {
 
-                    if (!globV.cntrlPrsd || !globV.selector) return;
+                    if (!globV.ctrl || !globV.initialized) return;
 
                     //to stop default exection
                     e.preventDefault();
@@ -124,22 +128,12 @@
             this.eventAssigner(document, 'keydown', function (e) {
                 if (e.keyCode == 17) {
                     globV.ctrl = true;
-                } else if (e.keyCode == 18) {
-                    globV.alt = true;
-                }
-                //to make cntrlPrsd flag true to denote to take special action on key press
-                globV.cntrlPrsd = globV.ctrl && globV.alt;
+                } 
             });
             this.eventAssigner(document, 'keyup', function (e) {
                 if (e.keyCode == 17) {
                     globV.ctrl = false;
-                } else if (e.keyCode == 18) {
-                    globV.alt = false;
                 }
-
-                //to make cntrlPrsd flag false
-                globV.cntrlPrsd = globV.ctrl && globV.alt;
-
             });
 
 
@@ -218,7 +212,7 @@
 
         },
         findTEvent: function () {
-            if (globV.cntrlPrsd) return;
+            if (globV.ctrl) return;
 
             var str = getDom('findTextbx').value,
                 regexSearch = getDom('regexSearch').checked,
