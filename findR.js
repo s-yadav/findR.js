@@ -72,7 +72,7 @@
             }
             //for ie	
             else {
-                elm.attachEvent(events, callback)
+                elm.attachEvent('on'+events, callback)
             }
         },
         eventRemove: function (elm, events, callback) {
@@ -84,7 +84,7 @@
 
             //for ie	
             else {
-                elm.detachEvent(events, callback);
+                elm.detachEvent('on'+events, callback);
             }
 
         },
