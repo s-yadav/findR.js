@@ -30,4 +30,4 @@ There are four control keys.
 1.	<strong>f (ctrl+f)</strong> : To open find and replace toolbar.
 2.	<strong>n (ctrl+n)</strong> : To go to next selection (cyclic).
 3.  <strong>p (ctrl+p)</strong> : To go to previous selection (cyclic).
-4.  <strong>f (ctrl+f)</strong> : To replace the current marked selection with replace text and go to next selection.
+4.  <strong>r (ctrl+r)</strong> : To replace the current marked selection with replace text and go to next selection.
