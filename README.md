@@ -5,6 +5,8 @@ A find and replace JavaScript plugin for webpages.
 
 Either you are giving a editable content or making an editor , find and replace will be very useful feature in your page. findR.js provide find and replace feature with regular expression search for your purpose.
 
+** Both jquery version and native javascript version is included for plugin , so you use one as per your need. **
+
 <h3>Features :</h3>
 
 1.  Support multiple instances in a page.
