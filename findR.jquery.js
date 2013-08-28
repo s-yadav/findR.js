@@ -1,5 +1,5 @@
 /*
-	findR.js v 0.6.0
+	findR.js v 0.6.0 (jquery version for findR.js)
 	Author: sudhanshu yadav
 	Copyright (c) 2013 Sudhanshu Yadav, released under the MIT license.
 	www.ignitersworld.com
@@ -16,7 +16,7 @@
         //cache dom elements
         getDom = function (id) {
             if (!globV[id]) {
-                globV[id] = document.getElementById(id);
+                globV[id] = $(id);
             }
             return globV[id];
         }
@@ -25,7 +25,7 @@
 
         //return a findR object
     var findR = function (selector) {
-        findR.fn.eventAssigner(window, 'load', function () {
+        $(function () {
             findR.fn.init(selector);
         });
     }
@@ -33,10 +33,14 @@
     //create protype of findR
     findR.fn = findR.prototype = {
         init: function (selector) {
+            //set basic global values which will be used later within function
+            globV.body = $('body');
+            globV.document = $(document);
+
             if (!selector || selector == document) {
-                selector = document.getElementsByTagName('body')[0];
+                selector = globV.body;
             } else {
-                selector = document.getElementById(selector);
+                selector = $(selector);
             }
 
 
@@ -54,41 +58,18 @@
             }
 
             //to bind click event on instance
-            this.eventAssigner(selector, 'click', function (e) {
+            selector.bind('click', function (e) {
                 //to change selector
                 globV.selector = selector;
                 e.stopPropagation();
             });
 
         },
-        eventAssigner: function (elm, events, callback) {
-            //for all browser other than ie
-            if (window.addEventListener) {
-                elm.addEventListener(events, callback, false)
-            }
-            //for ie	
-            else {
-                elm.attachEvent('on' + events, callback)
-            }
-        },
-        eventRemove: function (elm, events, callback) {
-            //for all browser other than ie
-
-            if (window.removeEventListener) {
-                elm.removeEventListener(events, callback)
-            }
-
-            //for ie	
-            else {
-                elm.detachEvent('on' + events, callback);
-            }
-
-        },
         bindKeyEvent: function () {
 
             //objects
             //find textbox
-            var findT = getDom('findTextbx'),
+            var findT = getDom('#findTextbx'),
 
                 eventCallback = function (e) {
 
@@ -118,15 +99,15 @@
 
 
                 //to bind event on all keys
-            this.eventAssigner(document, 'keydown', eventCallback);
+            globV.document.bind('keydown', eventCallback);
 
             //bind key event on cntrl
-            this.eventAssigner(document, 'keydown', function (e) {
+            globV.document.bind('keydown', function (e) {
                 if (e.keyCode == 17) {
                     globV.ctrl = true;
                 }
             });
-            this.eventAssigner(document, 'keyup', function (e) {
+            globV.document.bind('keyup', function (e) {
                 if (e.keyCode == 17) {
                     globV.ctrl = false;
                 }
@@ -134,27 +115,26 @@
 
 
             //bind key event on text box
-            this.eventAssigner(findT, 'keyup', function (e) {
+            findT.bind('keyup', function (e) {
                 if (e.keyCode != 17 && e.keyCode != 18) {
                     findR.fn.findTEvent();
                 }
             });
 
             //bind event on replace button
-            this.eventAssigner(getDom('replaceButn'), 'click', function () {
+            getDom('#replaceButn').bind('click', function () {
                 findR.fn.replaceMethod();
             });
 
             //bind event on replace all button
-            this.eventAssigner(getDom('replaceAllButn'), 'click', function () {
+            getDom('#replaceAllButn').bind('click', function () {
                 findR.fn.replaceMethod(true);
             });
 
             //assign event on close button
-            this.eventAssigner(getDom('closeFrToolbar'), 'click', function (e) {
-                //to display toolbar and reset textbox values;
-                getDom('frToolbar').style.display = 'none';
-                getDom('frToolbarForm').reset();
+            getDom('#closeFrToolbar').bind('click', function (e) {
+                getDom('#frToolbar')[0].style.display = 'none';
+                getDom('#frToolbarForm')[0].reset();
                 globV.initialized = false;
 
                 //to unrap all highligted text
@@ -166,9 +146,9 @@
         },
 
         openToolbar: function () {
-            var frToolbar = getDom('frToolbar');
+            var frToolbar = getDom('#frToolbar');
 
-            frToolbar.style.display = "block";
+            frToolbar[0].style.display = "block";
 
             //to make initialze flag true
             globV.initialized = true;
@@ -212,9 +192,9 @@
             }
 
             //to get nodes
-            findNodes(globV.selector);
+            findNodes(globV.selector[0]);
             //store wrapper in this
-            this.findRTextWrapper = document.getElementsByClassName('findRTextWrapper');
+            this.findRTextWrapper = $('.findRTextWrapper');
 
 
         },
@@ -233,12 +213,14 @@
 
             //to remove selected wrap
             while (selElm.length != 0) {
-                removeWrap(selElm[0])
+                removeWrap(selElm[selElm.length - 1]);
+                selElm.length--;
             }
 
             //to remove text wrap
             while (textWrap.length != 0) {
-                removeWrap(textWrap[0])
+                removeWrap(textWrap[textWrap.length - 1]);
+                textWrap.length--;
             }
 
 
@@ -246,9 +228,9 @@
         findTEvent: function () {
             if (globV.ctrl) return;
 
-            var str = getDom('findTextbx').value,
-                regexSearch = getDom('regexSearch').checked,
-                matchCase = getDom('matchCase').checked,
+            var str = getDom('#findTextbx').val(),
+                regexSearch = getDom('#regexSearch')[0].checked,
+                matchCase = getDom('#matchCase')[0].checked,
                 flag = matchCase ? 'g' : 'gi',
                 regEx;
 
@@ -294,15 +276,14 @@
             }
 
             //to add focused class on first one
-            var selectedElm = document.getElementsByClassName('findRhighlighted');
+            var selectedElm = $('.findRhighlighted');
             if (selectedElm.length != 0) {
                 selectedElm[0].className = "findRhighlighted findRhighlightedFocused";
             }
 
             //store selected elmenet and focused elem on this
             this.selectedElm = selectedElm;
-            this.focusedElm = document.getElementsByClassName('findRhighlightedFocused');
-            this.focusindex = 0;
+            this.focusedElm = $('.findRhighlightedFocused');
 
             this.scrollToFocus();
 
@@ -310,78 +291,77 @@
         //replace method
         replaceMethod: function (allElm) {
             //replace string 
-            var rstr = getDom('replaceTextbx').value;
+            var rstr = getDom('#replaceTextbx').val();
 
             if (allElm) {
-                var elm = Array.prototype.slice.apply(this.selectedElm);
+                var elm = this.selectedElm;
             }
             //replace and got to next
             else {
-                var elm = [this.focusedElm[0]];
+                var elm = this.focusedElm;
 
-                //to goto next elemnet if one element to be replaced
+            }
+
+            for (var i = 0, ln = elm.length; i < ln; i++) {
+                var parent = elm[i].parentNode,
+                    tNode = document.createTextNode(rstr);
+                parent.insertBefore(tNode, elm[i]);
+                parent.removeChild(elm[i]);
+            }
+
+            //to goto next elemnet if one element to be replaced
+            if (!allElm) {
                 this.focusNext();
             }
-
-            while (elm.length != 0) {
-                var parent = elm[0].parentNode,
-                    tNode = document.createTextNode(rstr);
-                parent.insertBefore(tNode, elm[0]);
-                parent.removeChild(elm[0]);
-
-                //to remove from array
-                elm.splice(0, 1);
-
-            }
+            //to again initialize selected element
+            this.selectedElm = $('.findRhighlighted');
 
         },
 
 
         focusNext: function () {
-            if (this.selectedElm.length != 0) {
-                var selElm = this.selectedElm,
-                    elmFoc = this.focusedElm[0],
-                    index = this.getIndexElm(selElm, elmFoc);
+            var selElm = this.selectedElm,
+                elmFoc = this.focusedElm[0],
+                index = selElm.index(elmFoc);
 
-                //to make it circular
-                if (index == selElm.length - 1) {
-                    index = -1;
-                }
+            if (selElm.length == 0) return;
 
-                elmFoc.className = "findRhighlighted";
-                selElm[index + 1].className = "findRhighlighted findRhighlightedFocused";
-
-                //to go to selected area		
-                this.scrollToFocus();
+            //to make it circular
+            if (index == selElm.length - 1) {
+                console.log(index);
+                index = -1;
             }
+
+            elmFoc.className = "findRhighlighted";
+            selElm[index + 1].className = "findRhighlighted findRhighlightedFocused";
+
+            //to go to selected area		
+            this.focusedElm = $('.findRhighlightedFocused');
+            this.scrollToFocus();
         },
         focusPrev: function () {
-            if (this.selectedElm.length != 0) {
-                var selElm = this.selectedElm,
-                    elmFoc = this.focusedElm[0],
-                    index = this.getIndexElm(selElm, elmFoc);
+            var selElm = this.selectedElm,
+                elmFoc = this.focusedElm[0],
+                index = selElm.index(elmFoc);
+
+            if (selElm.length == 0) return;
 
 
-                //to make it circular
-                if (index == 0) {
-                    index = selElm.length;
-                }
-
-                elmFoc.className = "findRhighlighted";
-                selElm[index - 1].className = "findRhighlighted findRhighlightedFocused";
-
-                //to go to selected area
-                this.scrollToFocus();
+            //to make it circular
+            if (index == 0) {
+                console.log(index);
+                index = selElm.length;
             }
+
+            elmFoc.className = "findRhighlighted";
+            selElm[index - 1].className = "findRhighlighted findRhighlightedFocused";
+
+            //to go to selected area
+
+            this.focusedElm = $('.findRhighlightedFocused');
+            this.scrollToFocus();
         },
 
-
-        getIndexElm: function (collection, elm) {
-            for (var i = 0, ln = collection.length; i < ln; i++) {
-                if (collection[i] == elm) return i;
-            }
-            return -1;
-        },
         escapeRegExp: function (str) {
             return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         },
@@ -404,13 +384,11 @@
             }
         },
         addHtml: function () {
-            if (!getDom('frToolbar')) {
-                var findRtoolbar = document.createElement('div');
-                findRtoolbar.innerHTML = '<form id="frToolbarForm">Find :<input type="textbox" id="findTextbx"/> &nbsp;&nbsp; Replace:<input type="textbox" id="replaceTextbx"/> &nbsp;&nbsp; Match Cases:<input type="checkbox" id="matchCase" checked="checked" /> &nbsp;&nbsp; Regex Search:<input type="checkbox" id="regexSearch"  /> <input type="button" id="replaceButn" value="Find And Replace"/>&nbsp; &nbsp;<input type="button" id="replaceAllButn" value="Replace All"/> &nbsp;&nbsp;&nbsp;<span id="closeFrToolbar">&times;</span></form>';
-                findRtoolbar.id = "frToolbar";
-                findRtoolbar.setAttribute('class', 'findRtoolbar');
+            if ($('#frToolbar').length == 0) {
+                var findRtoolbar = $('<div id="frToolbar" class="findRtoolbar"></div>');
+                findRtoolbar.html('<form id="frToolbarForm">Find :<input type="textbox" id="findTextbx"/> &nbsp;&nbsp; Replace:<input type="textbox" id="replaceTextbx"/> &nbsp;&nbsp; Match Cases:<input type="checkbox" id="matchCase" checked="checked" /> &nbsp;&nbsp; Regex Search:<input type="checkbox" id="regexSearch"  /> <input type="button" id="replaceButn" value="Find And Replace"/>&nbsp; &nbsp;<input type="button" id="replaceAllButn" value="Replace All"/> &nbsp;&nbsp;&nbsp;<span id="closeFrToolbar">&times;</span></form>');
 
-                document.getElementsByTagName('body')[0].appendChild(findRtoolbar);
+                globV.body.append(findRtoolbar);
             }
         }
 
